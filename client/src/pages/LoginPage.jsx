@@ -1,13 +1,27 @@
+import { jwtDecode } from "jwt-decode";
 import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async(event) => {
     event.preventDefault();
     // 🐨 Todo: Exercise #4
     //  นำ Function `login` ใน AuthContext มา Execute ใน Event Handler ตรงนี้
+    const result = await axios.post(`http://localhost:4000/auth/login/`, {
+      username: username,
+      password: password
+    });
+
+    const token = result.data.token
+    localStorage.setItem("token", token)
+    const userDataFromToken = jwtDecode(token);
+    // setState({ ...state, user: userDataFromToken })
+    navigate("/");
   };
 
   return (
