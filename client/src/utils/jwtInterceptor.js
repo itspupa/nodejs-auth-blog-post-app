@@ -6,7 +6,11 @@ function jwtInterceptor() {
     //  ให้เขียน Logic ในการแนบ Token เข้าไปใน Header ของ Request
     // เมื่อมีการส่ง Request จาก Client ไปหา Server
     // ภายใน Callback Function axios.interceptors.request.use
-
+    const token = localStorage.getItem("token");
+    if (token) {
+      req.headers = req.headers || {};
+      req.headers["Authorization"] = `Bearer ${token}`;
+    }
     return req;
   });
 
@@ -15,11 +19,18 @@ function jwtInterceptor() {
       return req;
     },
     (error) => {
-      // 🐨 Todo: Exercise #6
+      const status = error?.response?.status;
+      if (status === 401) {
+        // 🐨 Todo: Exercise #6
       //  ให้เขียน Logic ในการรองรับเมื่อ Server ได้ Response กลับมาเป็น Error
       // โดยการ Redirect ผู้ใช้งานไปที่หน้า Login และลบ Token ออกจาก Local Storage
       // ภายใน Error Callback Function ของ axios.interceptors.response.use
-
+        localStorage.removeItem("token");
+        // Redirect to login
+        if (typeof window !== "undefined") {
+          window.location.assign("/login");
+        }
+      }
       return Promise.reject(error);
     }
   );

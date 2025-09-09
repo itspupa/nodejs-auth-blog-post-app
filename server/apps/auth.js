@@ -60,7 +60,7 @@ try {
               firstName: user.firstName,
               lastName: user.lastName
           },
-          process.env.SECRET_KEY,
+          process.env.SECRET_KEY || "dev-secret-123",
           {
               expiresIn: '900000',
           }
