@@ -21,6 +21,13 @@ async function init() {
   app.get("/", (req, res) => {
     res.send("Hello World!");
   });
+  // จัดการข้อผิดพลาดส่วนกลางสำหรับ JSON ไม่ถูกต้องและข้อผิดพลาดอื่นๆ
+  app.use((err, req, res, next) => {
+    if (err && (err.type === "entity.parse.failed" || err instanceof SyntaxError)) {
+      return res.status(400).json({ message: "Invalid JSON payload" });
+    }
+    return res.status(500).json({ message: "Internal server error" });
+  });
   app.get("*", (req, res) => {
     res.status(404).send("Not found");
   });
