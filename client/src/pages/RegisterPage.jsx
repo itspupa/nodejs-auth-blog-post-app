@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 
 function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -6,10 +7,17 @@ function RegisterPage() {
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     // 🐨 Todo: Exercise #2
     // นำ Function `register` ใน AuthContext มา Execute ใน Event Handler ตรงนี้
+    await axios.post(`http://localhost:4000/auth/register/`, {
+      username: username,
+      password: password,
+      firstName: firstName,
+      lastName: lastName,
+    });
+
   };
 
   return (
@@ -83,5 +91,4 @@ function RegisterPage() {
     </div>
   );
 }
-
 export default RegisterPage;
